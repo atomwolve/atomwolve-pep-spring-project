@@ -8,12 +8,12 @@ import org.springframework.stereotype.Repository;
 import com.example.entity.Message;
 
 @Repository
-public interface MessageRepository extends JpaRepository<Message, Long>{
+public interface MessageRepository extends JpaRepository<Message, Integer>{
 
     /**
      * @param userId the userId to search by.
      * @returns All messages where postedBy matches the provided userId.
      */
     @Query("FROM Message WHERE postedBy = :userId")
-    List<Message> getMessagesByUserId(@Param("userId") long userId);
+    List<Message> getMessagesByUserId(@Param("userId") Integer userId);
 }

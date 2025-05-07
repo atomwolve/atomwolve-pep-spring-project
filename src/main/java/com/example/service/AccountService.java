@@ -6,6 +6,7 @@ import com.example.repository.AccountRepository;
 import com.example.repository.MessageRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,9 +28,18 @@ public class AccountService {
     public Account addAccount(Account account){
         if(account.getUsername().isBlank()) return null;
         if(account.getPassword().length() < 4) return null;
+        if(accountRepository.getAccount(account.getUsername()) != null) return null;
+
         return accountRepository.save(account);
     }
 
+    public Account getAccountByUsername(String username){
+        return accountRepository.getAccount(username);
+    }
+    public Account getAccountById(Integer id){
+        Optional<Account> optionalAccount = accountRepository.findById(id);
+        return optionalAccount.isPresent() ? optionalAccount.get() : null;
+    }
     /**
      * @param account the account to try to log into.
      * @returns The account logged into. Returns null if no account found.

@@ -1,5 +1,6 @@
 package com.example.service;
 import org.springframework.stereotype.Service;
+
 import com.example.entity.Message;
 import com.example.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,8 @@ public class MessageService {
      * @returns The message saved to the repository.
      */
     public Message addMessage(Message message){
+        if(message.getMessageText().isBlank()) return null;
+        if(message.getMessageText().length() > 255) return null;
         return messageRepository.save(message);
     }
 
@@ -37,26 +40,31 @@ public class MessageService {
      * @param messageId the messageId to search the repository by.
      * @returns The message found by its corresponding messageId.
      */
-    public Message getMessageById(long messageId){
-        return messageRepository.getById(messageId);
+    public Message getMessageById(Integer messageId){
+        Optional<Message> optionalMessage = messageRepository.findById(messageId);
+        return optionalMessage.isPresent() ? optionalMessage.get() : null;
     }
 
     /**
      * @param messageId the id of the message to be deleted. 
      * @returns Whether a message was found or not (and therefore whether a message was deleted or not).
      */
-    public boolean deleteMessageById(long messageId){
-        boolean hasMessage = messageRepository.getById(messageId) == null;
+    public boolean deleteMessageById(Integer messageId){
+        Optional<Message> optionalMessage = messageRepository.findById(messageId);
+        if(!optionalMessage.isPresent()) return false;
         messageRepository.deleteById(messageId);
-        return hasMessage;
+        return true;
     }
 
     /**
      * @param message the updated message to patch into the repository.
      * @returns Whether a message was found or not (and therefore whether a message was patched or not).
      */
-    public boolean patchMessageById(Message replacement, long messageId){
+    public boolean patchMessageById(Message replacement, Integer messageId){
 
+        if(replacement.getMessageText().isBlank()) return false;
+        if(replacement.getMessageText().length() > 255) return false;
+        
         Optional<Message> optionalMessage = messageRepository.findById(messageId);
         if(optionalMessage.isPresent()){
             Message message = optionalMessage.get();
@@ -71,7 +79,7 @@ public class MessageService {
      * @param userId the userId to search the repository by.
      * @returns All messages found by its corresponding userId.
      */
-    public List<Message> getMessagesByUser(long userId){
+    public List<Message> getMessagesByUser(Integer userId){
         return messageRepository.getMessagesByUserId(userId);
     }
 }
