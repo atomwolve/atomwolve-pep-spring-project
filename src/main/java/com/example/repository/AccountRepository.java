@@ -1,5 +1,4 @@
 package com.example.repository;
-import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -10,13 +9,20 @@ import com.example.entity.Account;
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Integer>{
 
-     /**
-     * @param 
-     * @returns 
-     */
-    @Query("FROM Account WHERE username = :username")
+    /**
+     * Searches the account database for a user with a matching username.
+    * @param username the username to search for.
+    * @returns an account with a matching username.
+    */
+    @Query("FROM account WHERE username = :username")
     Account getAccount(@Param("username") String username);
 
-    @Query("FROM Account WHERE username = :username AND password = :password")
+    /**
+      * Searches the account database for a user with a matching username and password.
+     * @param username the username to search by.
+     * @param password the password to search by.
+     * @returns an account with a matching username and password.
+     */
+    @Query("FROM account WHERE username = :username AND password = :password")
     Account getAccount(@Param("username") String username, @Param("password") String password);
 }
