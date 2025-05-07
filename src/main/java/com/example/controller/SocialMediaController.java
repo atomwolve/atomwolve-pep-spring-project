@@ -32,7 +32,7 @@ public class SocialMediaController
     * @param account the account being registered.
     * @returns If successful, returns the addedAccount (including its id).
     *          Upon failure, either returns:
-*              - status code 409 (if duplicate)
+    *          - status code 409 (if duplicate)
     *          - status code 400 (general failure)
     */
     @PostMapping("/register")
